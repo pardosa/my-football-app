@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "description": "My Football App",
+    "title": "My Football App",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api-football-beta.p.rapidapi.com",
+      "description": "Beta"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/leagues": {
+      "get": {
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "description": "Get list of Leagues",
+        "tags": ["Leagues"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "description": "Get list of Leagues by name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leagues"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams": {
+      "get": {
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "description": "Get list of Teams",
+        "tags": ["Leagues"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "description": "Get list of Teams by name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Teams"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Leagues": {
+        "type": "object",
+        "properties": {
+          "league": {
+            "$ref": "#/components/schemas/League"
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          },
+          "seasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Season"
+            }
+          }
+        }
+      },
+      "League": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "type"]
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "flag": {
+            "type": "string"
+          }
+        },
+        "required": ["name"]
+      },
+      "Season": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "coverage": {
+            "$ref": "#/components/schemas/Coverage"
+          }
+        }
+      },
+      "Fixture": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "boolean"
+          },
+          "lineups": {
+            "type": "boolean"
+          },
+          "statistics_fixtures": {
+            "type": "boolean"
+          },
+          "statistics_players": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Coverage": {
+        "type": "object",
+        "properties": {
+          "standings": {
+            "type": "boolean"
+          },
+          "players": {
+            "type": "boolean"
+          },
+          "top_scorers": {
+            "type": "boolean"
+          },
+          "top_assists": {
+            "type": "boolean"
+          },
+          "top_cards": {
+            "type": "boolean"
+          },
+          "injuries": {
+            "type": "boolean"
+          },
+          "predictions": {
+            "type": "boolean"
+          },
+          "odds": {
+            "type": "boolean"
+          },
+          "fixtures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Fixture"
+            }
+          }
+        }
+      },
+      "Teams": {
+        "type": "object",
+        "properties": {
+          "team": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "venue": {
+            "$ref": "#/components/schemas/Venue"
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "founded": {
+            "type": "number"
+          },
+          "national": {
+            "type": "boolean"
+          },
+          "logo": {
+            "type": "string"
+          }
+        }
+      },
+      "Venue": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "number"
+          },
+          "capacity": {
+            "type": "number"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "See #components/schemas/Jwt"
+      }
+    }
+  },
+  "security": []
+}
