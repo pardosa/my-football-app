@@ -48,6 +48,10 @@ const MainRoutes = {
           path: "teams",
           element: <Teams />,
         },
+        {
+          path: "teams/:id/:season",
+          element: <Teams />,
+        },
       ],
     },
     {

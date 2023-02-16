@@ -1,7 +1,8 @@
 // types
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { TLeagues } from "../types";
+import { components } from "../../types/openapi";
+type TLeagues = components["schemas"]["Leagues"];
 
 export interface ILeaguesState {
   leagues: Array<TLeagues>;

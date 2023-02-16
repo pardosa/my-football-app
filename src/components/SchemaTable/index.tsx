@@ -481,7 +481,6 @@ export default function SchemaTable<T>(
   );
 
   const tablePaginated = useMemo(() => {
-    console.log(page);
     return filteredRenderData ? (
       <TableBody>
         {(rowsPerPage > 0

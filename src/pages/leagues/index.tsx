@@ -14,6 +14,7 @@ import { components } from "../../types/openapi";
 import openapi from "../../openapi.json";
 import { SchemaObject } from "openapi3-ts";
 import { Stack, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 type TLeagues = components["schemas"]["Leagues"];
 
@@ -22,6 +23,7 @@ export default function Leagues() {
   const leagues: TLeagues[] = useSelector(selectAllLeagues);
   const status = useSelector(getLeaguesStatus);
   //const error = useSelector(getLeaguesError);
+  const navigate = useNavigate();
   const leaguesSchema = useMemo(
     () =>
       ({
@@ -59,14 +61,16 @@ export default function Leagues() {
       country: {
         title: "Country",
         renderCell: (row) => {
-          return row.country?.flag !== null ? (
+          return row.country?.name !== null ? (
             <Stack direction="row" spacing={4}>
               <ListItemAvatar>
                 <Avatar alt={row.country?.name} src={row.country?.flag} />
               </ListItemAvatar>
               <ListItemText primary={row.country?.name} secondary={""} />
             </Stack>
-          ) : null;
+          ) : (
+            <></>
+          );
         },
       },
     }),
@@ -85,7 +89,13 @@ export default function Leagues() {
       width={window.innerWidth - 25}
       config={config}
       onRowClick={(row) => {
-        console.log(row);
+        if (row.seasons && row.league)
+          navigate(
+            "/dashboard/teams/" +
+              row.league?.id +
+              "/" +
+              row.seasons[row.seasons?.length - 1].year
+          );
       }}
     />
   ) : (
