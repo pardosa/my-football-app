@@ -86,6 +86,43 @@
           }
         }
       }
+    },
+    "/standings": {
+      "get": {
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "description": "Get list of standings",
+        "tags": ["Leagues"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "description": "Get list of standings by seasons and team id or league id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Standings"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -284,7 +321,7 @@
       "StandingGame": {
         "type": "object",
         "properties": {
-          "playes": {
+          "played": {
             "type": "number"
           },
           "win": {
@@ -339,6 +376,12 @@
           }
         }
       },
+      "StandingArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/StandingTeam"
+        }
+      },
       "StandingLeague": {
         "type": "object",
         "properties": {
@@ -364,7 +407,7 @@
           "standings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StandingTeam"
+              "$ref": "#/components/schemas/StandingArray"
             }
           }
         }
