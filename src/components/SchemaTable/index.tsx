@@ -258,13 +258,13 @@ export default function SchemaTable<T>(
                     prev[propName] = rawValue ? "✓" : "✕";
                     return prev;
 
-                  case "integer":
+                  case "number":
                     prev[propName] = `${rawValue}`;
                     return prev;
 
-                  case "number":
-                    prev[propName] = formatMoney(rawValue || 0);
-                    return prev;
+                  // case "number":
+                  //   prev[propName] = formatMoney(rawValue || 0);
+                  //   return prev;
 
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
