@@ -111,6 +111,42 @@ export interface components {
       surface?: string;
       image?: string;
     };
+    StandingGoals: {
+      for?: number;
+      againts?: number;
+    };
+    StandingGame: {
+      playes?: number;
+      win?: number;
+      draw?: number;
+      lose?: number;
+      goals?: components["schemas"]["StandingGoals"];
+    };
+    StandingTeam: {
+      rank?: number;
+      team?: components["schemas"]["Team"];
+      points?: number;
+      goalsDiff?: number;
+      group?: string;
+      form?: string;
+      status?: string;
+      description?: string;
+      all?: components["schemas"]["StandingGame"];
+      home?: components["schemas"]["StandingGame"];
+      away?: components["schemas"]["StandingGame"];
+    };
+    StandingLeague: {
+      id?: string;
+      name?: string;
+      logo?: string;
+      flag?: string;
+      country?: string;
+      season?: string;
+      standings?: (components["schemas"]["StandingTeam"])[];
+    };
+    Standings: {
+      league?: components["schemas"]["StandingLeague"];
+    };
   };
   responses: never;
   parameters: never;

@@ -269,6 +269,113 @@
             "type": "string"
           }
         }
+      },
+      "StandingGoals": {
+        "type": "object",
+        "properties": {
+          "for": {
+            "type": "number"
+          },
+          "againts": {
+            "type": "number"
+          }
+        }
+      },
+      "StandingGame": {
+        "type": "object",
+        "properties": {
+          "playes": {
+            "type": "number"
+          },
+          "win": {
+            "type": "number"
+          },
+          "draw": {
+            "type": "number"
+          },
+          "lose": {
+            "type": "number"
+          },
+          "goals": {
+            "$ref": "#/components/schemas/StandingGoals"
+          }
+        }
+      },
+      "StandingTeam": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "number"
+          },
+          "team": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "points": {
+            "type": "number"
+          },
+          "goalsDiff": {
+            "type": "number"
+          },
+          "group": {
+            "type": "string"
+          },
+          "form": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "all": {
+            "$ref": "#/components/schemas/StandingGame"
+          },
+          "home": {
+            "$ref": "#/components/schemas/StandingGame"
+          },
+          "away": {
+            "$ref": "#/components/schemas/StandingGame"
+          }
+        }
+      },
+      "StandingLeague": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "flag": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "season": {
+            "type": "string"
+          },
+          "standings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingTeam"
+            }
+          }
+        }
+      },
+      "Standings": {
+        "type": "object",
+        "properties": {
+          "league": {
+            "$ref": "#/components/schemas/StandingLeague"
+          }
+        }
       }
     },
     "securitySchemes": {
