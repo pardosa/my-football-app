@@ -91,7 +91,7 @@ export default function Leagues() {
       onRowClick={(row) => {
         if (row.seasons && row.league)
           navigate(
-            "/dashboard/teams/" +
+            "/dashboard/standings/" +
               row.league?.id +
               "/" +
               row.seasons[row.seasons?.length - 1].year

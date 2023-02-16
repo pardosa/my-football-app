@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 // project import
 import MainLayout from "../layout/MainLayout";
+import { Standings } from "../pages/standings";
 import { Teams } from "../pages/teams";
 
 // render - dashboard
@@ -51,6 +52,10 @@ const MainRoutes = {
         {
           path: "teams/:id/:season",
           element: <Teams />,
+        },
+        {
+          path: "standings/:leagueId/:season",
+          element: <Standings />,
         },
       ],
     },
