@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { AppDispatch, dispatch } from "../../store";
-import leagues, {
+import { AppDispatch } from "../../store";
+import {
   getLeagues,
   getLeaguesStatus,
   selectAllLeagues,

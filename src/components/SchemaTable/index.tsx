@@ -7,13 +7,24 @@ import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
+  Box,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TableFooter,
+  TablePagination,
+  useTheme,
 } from "@mui/material";
+
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
 
 export interface IColumnConfig<T> {
   align?: "center";
@@ -56,6 +67,16 @@ export interface IRenderData {
   [key: string]: any;
 }
 
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number
+  ) => void;
+}
+
 export default function SchemaTable<T>(
   props: ISimpleTableProps<T>
 ): JSX.Element {
@@ -73,12 +94,98 @@ export default function SchemaTable<T>(
   const [renderData, setRenderData] = React.useState<IRenderData[]>();
   const [columnSort, setColumnSort] = React.useState<string>();
   const [isSortAsc, setIsSortAsc] = React.useState<boolean>(true);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const sortedData: T[] = useMemo(
     () => _.orderBy(data, [columnSort], [isSortAsc ? "asc" : "desc"]) as T[],
     [data, columnSort, isSortAsc]
   );
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [rowClicked, setRowClicked] = React.useState<number>(-1);
+
+  function TablePaginationActions(props: TablePaginationActionsProps) {
+    const theme = useTheme();
+    const { count, page, rowsPerPage, onPageChange } = props;
+
+    const handleFirstPageButtonClick = (
+      event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      onPageChange(event, 0);
+    };
+
+    const handleBackButtonClick = (
+      event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      onPageChange(event, page - 1);
+    };
+
+    const handleNextButtonClick = (
+      event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      onPageChange(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (
+      event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
+    return (
+      <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="first page"
+        >
+          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        </IconButton>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="last page"
+        >
+          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        </IconButton>
+      </Box>
+    );
+  }
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const { properties = {} } = schema;
   const columnNames = React.useMemo<string[]>(() => {
@@ -373,57 +480,68 @@ export default function SchemaTable<T>(
     [location.pathname]
   );
 
+  const tablePaginated = useMemo(() => {
+    console.log(page);
+    return filteredRenderData ? (
+      <TableBody>
+        {(rowsPerPage > 0
+          ? filteredRenderData.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )
+          : filteredRenderData
+        ).map((data, rowIndex: number) => {
+          return (
+            <TableRow hover tabIndex={-1} key={`tr-${rowIndex}`}>
+              {columnNames.map((clm, columnIndex: number) =>
+                Td(page * rowsPerPage + rowIndex, columnIndex)
+              )}
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    ) : (
+      <></>
+    );
+  }, [filteredRenderData, rowsPerPage, page, columnNames, Td]);
+
   return (
-    <TableContainer>
-      <div className="d-flex mb-2 justify-content-between">
-        {isSearchable ? (
-          <input
-            className={"search-input my-0 shadow-none"}
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={onSearchChange}
-            autoFocus
-          />
-        ) : null}
-        {isExportable ? (
-          <button
-            className="btn btn-primary my-0"
-            onClick={() => {
-              const csv = convertDataToCsv();
-              exportToFile(csv as string);
-            }}
-          >
-            export
-          </button>
-        ) : null}{" "}
-      </div>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer>
+        <Table
+          sx={{ minWidth: 750 }}
+          aria-labelledby="tableTitle"
+          size={"medium"}
+        >
+          <TableHead>
+            <TableRow>{columnNames.map((clm, idx) => Th(idx))}</TableRow>
+          </TableHead>
 
-      <Table
-        sx={{ minWidth: 750 }}
-        aria-labelledby="tableTitle"
-        size={"medium"}
-      >
-        <TableHead>
-          <TableRow>{columnNames.map((clm, idx) => Th(idx))}</TableRow>
-        </TableHead>
-
-        {sortedData ? (
-          <TableBody>
-            {filteredRenderData?.map((data, rowIndex: number) => {
-              return (
-                <TableRow hover tabIndex={-1} key={`tr-${rowIndex}`}>
-                  {columnNames.map((clm, columnIndex: number) =>
-                    Td(rowIndex, columnIndex)
-                  )}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        ) : (
-          <CircularProgress />
-        )}
-      </Table>
-    </TableContainer>
+          {sortedData ? tablePaginated : <CircularProgress />}
+          {filteredRenderData ? (
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[10, 20, 50, { label: "All", value: -1 }]}
+                  colSpan={3}
+                  count={filteredRenderData.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          ) : null}
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
