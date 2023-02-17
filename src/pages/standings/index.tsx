@@ -12,9 +12,10 @@ import {
   CardHeader,
   Typography,
   Badge,
-  Button,
-  ButtonGroup,
+  Paper,
+  Grid,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import { AppDispatch } from "../../store";
 import SchemaTable, { IColumnConfig } from "../../components/SchemaTable";
@@ -28,6 +29,14 @@ import {
   getStandingsStatus,
   getStandings,
 } from "../../store/reducers/standings";
+import { ButtonGroup } from "../../components/@extended/ButtonGroup";
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 type TStandings = components["schemas"]["Standings"];
 type TStandingTeam = components["schemas"]["StandingTeam"];
@@ -38,6 +47,17 @@ export const Standings = () => {
   const status = useSelector(getStandingsStatus);
 
   const { id, season } = useParams();
+
+  const btnGroupTitle = (title: string) => (
+    <Grid container spacing={0}>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        {title}
+      </Grid>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <ButtonGroup games={["P", "W", "D", "L"]} />
+      </Grid>
+    </Grid>
+  );
 
   const standingLeagueSchema = useMemo(
     () =>
@@ -62,7 +82,11 @@ export const Standings = () => {
       rank: {
         title: "Rank",
         renderCell: (row) => (
-          <Badge badgeContent={row.rank} color="primary"></Badge>
+          <Grid container spacing={0}>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <Badge badgeContent={row.rank} color="primary"></Badge>
+            </Grid>
+          </Grid>
         ),
       },
       team: {
@@ -81,36 +105,54 @@ export const Standings = () => {
         },
       },
       all: {
-        title: "All Games",
+        title: btnGroupTitle("All games"),
         renderCell: (row) => (
-          <ButtonGroup variant="text" aria-label="All Games">
-            <Button>{row.all?.played} P</Button>
-            <Button>{row.all?.win} W</Button>
-            <Button>{row.all?.draw} D</Button>
-            <Button>{row.all?.lose} L</Button>
-          </ButtonGroup>
+          <Grid container spacing={0}>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <ButtonGroup
+                games={[
+                  row.all?.played,
+                  row.all?.win,
+                  row.all?.draw,
+                  row.all?.lose,
+                ]}
+              />
+            </Grid>
+          </Grid>
         ),
       },
       home: {
-        title: "Home Games",
+        title: btnGroupTitle("Home games"),
         renderCell: (row) => (
-          <ButtonGroup variant="text" aria-label="Home Games">
-            <Button>{row.home?.played} P</Button>
-            <Button>{row.home?.win} W</Button>
-            <Button>{row.home?.draw} D</Button>
-            <Button>{row.home?.lose} L</Button>
-          </ButtonGroup>
+          <Grid container spacing={0}>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <ButtonGroup
+                games={[
+                  row.home?.played,
+                  row.home?.win,
+                  row.home?.draw,
+                  row.home?.lose,
+                ]}
+              />
+            </Grid>
+          </Grid>
         ),
       },
       away: {
-        title: "Away Games",
+        title: btnGroupTitle("Away games"),
         renderCell: (row) => (
-          <ButtonGroup variant="text" aria-label="Away Games">
-            <Button>{row.away?.played} P</Button>
-            <Button>{row.away?.win} W</Button>
-            <Button>{row.away?.draw} D</Button>
-            <Button>{row.away?.lose} L</Button>
-          </ButtonGroup>
+          <Grid container spacing={0}>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <ButtonGroup
+                games={[
+                  row.away?.played,
+                  row.away?.win,
+                  row.away?.draw,
+                  row.away?.lose,
+                ]}
+              />
+            </Grid>
+          </Grid>
         ),
       },
     }),
@@ -119,8 +161,11 @@ export const Standings = () => {
 
   useEffect(() => {
     if (id && season)
-      dispatch(getStandings({ leagueId: Number(id), season: Number(season) }));
-  }, [dispatch, id, season]);
+      standings.length === 0 &&
+        dispatch(
+          getStandings({ leagueId: Number(id), season: Number(season) })
+        );
+  }, [dispatch, id, season, standings.length]);
 
   return status === "succeeded" && standings.length > 0 ? (
     <div>
