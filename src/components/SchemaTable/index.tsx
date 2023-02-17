@@ -522,7 +522,7 @@ export default function SchemaTable<T>(
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[10, 20, 50, { label: "All", value: -1 }]}
-                  colSpan={3}
+                  colSpan={columnNames.length}
                   count={filteredRenderData.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
