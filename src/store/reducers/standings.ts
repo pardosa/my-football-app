@@ -2,7 +2,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { components } from "../../types/openapi";
+import openapi from "../../openapi.json";
+
 type TStandings = components["schemas"]["Standings"];
+
+const RapidAPIKEY = process.env.REACT_APP_XRapidAPIKey;
+const RapidAPIHOST = process.env.REACT_APP_XRapidAPIHost;
+const baseURL = openapi.servers[0].url;
 
 export interface IStandingsState {
   standings: Array<TStandings>;
@@ -29,12 +35,11 @@ export const getStandings = createAsyncThunk(
     try {
       const response = await axios.request({
         method: "GET",
-        url: "https://api-football-beta.p.rapidapi.com/standings",
+        url: baseURL + "/standings",
         params: { league: leagueId, season: season },
         headers: {
-          "X-RapidAPI-Key":
-            "e4619ea8d8msh4dbe6fbda4fa1fdp16420ejsn87b49c43813a",
-          "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com",
+          "X-RapidAPI-Key": RapidAPIKEY,
+          "X-RapidAPI-Host": RapidAPIHOST,
         },
       });
       return response.data;

@@ -2,8 +2,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { components } from "../../types/openapi";
+import openapi from "../../openapi.json";
+
 type TLeagues = components["schemas"]["Leagues"];
 
+const RapidAPIKEY = process.env.REACT_APP_XRapidAPIKey;
+const RapidAPIHOST = process.env.REACT_APP_XRapidAPIHost;
+const baseURL = openapi.servers[0].url;
+console.log(RapidAPIKEY);
 export interface ILeaguesState {
   leagues: Array<TLeagues>;
   status: string;
@@ -20,10 +26,10 @@ const initialState: ILeaguesState = {
 // ==============================|| SLICE - leagues ||============================== //
 const options = {
   method: "GET",
-  url: "https://api-football-beta.p.rapidapi.com/leagues",
+  url: baseURL + "/leagues",
   headers: {
-    "X-RapidAPI-Key": "e4619ea8d8msh4dbe6fbda4fa1fdp16420ejsn87b49c43813a",
-    "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com",
+    "X-RapidAPI-Key": RapidAPIKEY,
+    "X-RapidAPI-Host": RapidAPIHOST,
   },
 };
 
