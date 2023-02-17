@@ -54,7 +54,7 @@ const MainRoutes = {
           element: <Teams />,
         },
         {
-          path: "standings/:leagueId/:season",
+          path: "standings/:id/:season",
           element: <Standings />,
         },
       ],
