@@ -12,13 +12,11 @@ import { store } from "./store";
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-  <React.StrictMode>
-    <ReduxProvider store={store}>
-      <BrowserRouter basename="/free">
-        <App />
-      </BrowserRouter>
-    </ReduxProvider>
-  </React.StrictMode>
+  <ReduxProvider store={store}>
+    <BrowserRouter basename="/free">
+      <App />
+    </BrowserRouter>
+  </ReduxProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

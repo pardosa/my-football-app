@@ -12,10 +12,8 @@ import {
   CardHeader,
   Typography,
   Badge,
-  Paper,
   Grid,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 
 import { AppDispatch } from "../../store";
 import SchemaTable, { IColumnConfig } from "../../components/SchemaTable";
@@ -30,13 +28,7 @@ import {
   getStandings,
 } from "../../store/reducers/standings";
 import { ButtonGroup } from "../../components/@extended/ButtonGroup";
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import { Badge as CustomBadge } from "../../components/@extended/Badge";
 
 type TStandings = components["schemas"]["Standings"];
 type TStandingTeam = components["schemas"]["StandingTeam"];
@@ -153,6 +145,16 @@ export const Standings = () => {
               />
             </Grid>
           </Grid>
+        ),
+      },
+      form: {
+        title: <div style={{ textAlign: "center" }}>Last Game</div>,
+        renderCell: (row) => (
+          <Stack direction="row" spacing={0}>
+            {row.form?.split("").map((fr) => (
+              <CustomBadge text={fr} />
+            ))}
+          </Stack>
         ),
       },
     }),
