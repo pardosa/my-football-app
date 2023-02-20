@@ -21,7 +21,7 @@ import { components } from "../../types/openapi";
 import openapi from "../../openapi.json";
 import { SchemaObject } from "openapi3-ts";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   selectAllStandings,
   getStandingsStatus,
@@ -37,6 +37,7 @@ export const Standings = () => {
   const dispatch = useDispatch<AppDispatch>();
   const standings: TStandings[] = useSelector(selectAllStandings);
   const status = useSelector(getStandingsStatus);
+  const navigate = useNavigate();
 
   const { id, season } = useParams();
 
@@ -208,7 +209,13 @@ export const Standings = () => {
               width={window.innerWidth - 25}
               config={config}
               onRowClick={(row) => {
-                console.log(row);
+                if (std.league?.season && row.team)
+                  navigate(
+                    "/dashboard/fixtures/" +
+                      row.team?.id +
+                      "/" +
+                      std.league?.season
+                  );
               }}
             />
           </CardContent>

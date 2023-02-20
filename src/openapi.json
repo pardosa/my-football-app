@@ -99,9 +99,9 @@
         "parameters": [
           {
             "in": "query",
-            "name": "name",
+            "name": "id",
             "required": false,
-            "description": "Get list of standings by seasons and team id or league id",
+            "description": "Get list of standings by season and team id  or league id",
             "schema": {
               "type": "string"
             }
@@ -116,6 +116,52 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Standings"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fixtures": {
+      "get": {
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "description": "Get list of standings",
+        "tags": ["Leagues"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "description": "Get list of Fixtures by season and team id",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "description": "Get list of Fixtures by season and team id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fixtures"
                   }
                 }
               }
@@ -157,11 +203,17 @@
           "logo": {
             "type": "string"
           },
+          "flag": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
           "type": {
             "type": "string"
           }
         },
-        "required": ["name", "type"]
+        "required": ["name"]
       },
       "Country": {
         "type": "object",
@@ -195,7 +247,7 @@
           }
         }
       },
-      "Fixture": {
+      "SeasonFixture": {
         "type": "object",
         "properties": {
           "events": {
@@ -242,7 +294,7 @@
           "fixtures": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Fixture"
+              "$ref": "#/components/schemas/SeasonFixture"
             }
           }
         }
@@ -278,6 +330,9 @@
           },
           "logo": {
             "type": "string"
+          },
+          "winner": {
+            "type": "boolean"
           }
         }
       },
@@ -304,6 +359,135 @@
           },
           "image": {
             "type": "string"
+          }
+        }
+      },
+      "Periods": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "number"
+          },
+          "second": {
+            "type": "number"
+          }
+        }
+      },
+      "Fixture": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "referee": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number"
+          },
+          "periods": {
+            "$ref": "#/components/schemas/Periods"
+          },
+          "venue": {
+            "$ref": "#/components/schemas/Venue"
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "long": {
+                "type": "string"
+              },
+              "short": {
+                "type": "string"
+              },
+              "elapsed": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "FixtureTeams": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "away": {
+            "$ref": "#/components/schemas/Team"
+          }
+        }
+      },
+      "FixtureGoals": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "number"
+          },
+          "away": {
+            "type": "number"
+          }
+        }
+      },
+      "FixtureScores": {
+        "type": "object",
+        "properties": {
+          "halftime": {
+            "$ref": "#/components/schemas/FixtureGoals"
+          },
+          "fulltime": {
+            "$ref": "#/components/schemas/FixtureGoals"
+          },
+          "extratime": {
+            "$ref": "#/components/schemas/FixtureGoals"
+          },
+          "penalty": {
+            "$ref": "#/components/schemas/FixtureGoals"
+          }
+        }
+      },
+      "FixtureLeague": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/League"
+          },
+          {
+            "type": "object",
+            "required": ["standings"],
+            "properties": {
+              "season": {
+                "type": "string"
+              },
+              "round": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "Fixtures": {
+        "type": "object",
+        "properties": {
+          "fixture": {
+            "$ref": "#/components/schemas/Fixture"
+          },
+          "league": {
+            "$ref": "#/components/schemas/FixtureLeague"
+          },
+          "teams": {
+            "$ref": "#/components/schemas/FixtureTeams"
+          },
+          "goals": {
+            "$ref": "#/components/schemas/FixtureGoals"
+          },
+          "scores": {
+            "$ref": "#/components/schemas/FixtureScores"
           }
         }
       },
@@ -383,34 +567,26 @@
         }
       },
       "StandingLeague": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/League"
           },
-          "name": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "flag": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "season": {
-            "type": "string"
-          },
-          "standings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StandingArray"
+          {
+            "type": "object",
+            "required": ["standings"],
+            "properties": {
+              "season": {
+                "type": "string"
+              },
+              "standings": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StandingArray"
+                }
+              }
             }
           }
-        }
+        ]
       },
       "Standings": {
         "type": "object",

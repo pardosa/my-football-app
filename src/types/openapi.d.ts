@@ -3,13 +3,14 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
   "/leagues": {
     /** @description Get list of Leagues */
     get: {
       /** @description Get list of Leagues */
       parameters?: {
-        /** @description Get list of Leagues by name */
+          /** @description Get list of Leagues by name */
         query?: {
           name?: string;
         };
@@ -18,7 +19,7 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "application/json": components["schemas"]["Leagues"][];
+            "application/json": (components["schemas"]["Leagues"])[];
           };
         };
       };
@@ -29,7 +30,7 @@ export interface paths {
     get: {
       /** @description Get list of Teams */
       parameters?: {
-        /** @description Get list of Teams by name */
+          /** @description Get list of Teams by name */
         query?: {
           name?: string;
         };
@@ -38,7 +39,7 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "application/json": components["schemas"]["Teams"][];
+            "application/json": (components["schemas"]["Teams"])[];
           };
         };
       };
@@ -49,16 +50,38 @@ export interface paths {
     get: {
       /** @description Get list of standings */
       parameters?: {
-        /** @description Get list of standings by seasons and team id or league id */
+          /** @description Get list of standings by season and team id  or league id */
         query?: {
-          name?: string;
+          id?: string;
         };
       };
       responses: {
         /** @description OK */
         200: {
           content: {
-            "application/json": components["schemas"]["Standings"][];
+            "application/json": (components["schemas"]["Standings"])[];
+          };
+        };
+      };
+    };
+  };
+  "/fixtures": {
+    /** @description Get list of standings */
+    get: {
+      /** @description Get list of standings */
+      parameters: {
+          /** @description Get list of Fixtures by season and team id */
+          /** @description Get list of Fixtures by season and team id */
+        query: {
+          id: number;
+          season: string;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": (components["schemas"]["Fixtures"])[];
           };
         };
       };
@@ -73,13 +96,15 @@ export interface components {
     Leagues: {
       league?: components["schemas"]["League"];
       country?: components["schemas"]["Country"];
-      seasons?: components["schemas"]["Season"][];
+      seasons?: (components["schemas"]["Season"])[];
     };
     League: {
       id?: string;
       name: string;
       logo?: string;
-      type: string;
+      flag?: string;
+      country?: string;
+      type?: string;
     };
     Country: {
       name: string;
@@ -92,7 +117,7 @@ export interface components {
       end?: string;
       coverage?: components["schemas"]["Coverage"];
     };
-    Fixture: {
+    SeasonFixture: {
       events?: boolean;
       lineups?: boolean;
       statistics_fixtures?: boolean;
@@ -107,7 +132,7 @@ export interface components {
       injuries?: boolean;
       predictions?: boolean;
       odds?: boolean;
-      fixtures?: components["schemas"]["Fixture"][];
+      fixtures?: (components["schemas"]["SeasonFixture"])[];
     };
     Teams: {
       team?: components["schemas"]["Team"];
@@ -120,6 +145,7 @@ export interface components {
       founded?: number;
       national?: boolean;
       logo?: string;
+      winner?: boolean;
     };
     Venue: {
       id?: number;
@@ -129,6 +155,49 @@ export interface components {
       capacity?: number;
       surface?: string;
       image?: string;
+    };
+    Periods: {
+      first?: number;
+      second?: number;
+    };
+    Fixture: {
+      id?: number;
+      referee?: string;
+      timezone?: string;
+      date?: string;
+      timestamp?: number;
+      periods?: components["schemas"]["Periods"];
+      venue?: components["schemas"]["Venue"];
+      status?: {
+        long?: string;
+        short?: string;
+        elapsed?: number;
+      };
+    };
+    FixtureTeams: {
+      home?: components["schemas"]["Team"];
+      away?: components["schemas"]["Team"];
+    };
+    FixtureGoals: {
+      home?: number;
+      away?: number;
+    };
+    FixtureScores: {
+      halftime?: components["schemas"]["FixtureGoals"];
+      fulltime?: components["schemas"]["FixtureGoals"];
+      extratime?: components["schemas"]["FixtureGoals"];
+      penalty?: components["schemas"]["FixtureGoals"];
+    };
+    FixtureLeague: components["schemas"]["League"] & {
+      season?: string;
+      round?: string;
+    };
+    Fixtures: {
+      fixture?: components["schemas"]["Fixture"];
+      league?: components["schemas"]["FixtureLeague"];
+      teams?: components["schemas"]["FixtureTeams"];
+      goals?: components["schemas"]["FixtureGoals"];
+      scores?: components["schemas"]["FixtureScores"];
     };
     StandingGoals: {
       for?: number;
@@ -154,15 +223,10 @@ export interface components {
       home?: components["schemas"]["StandingGame"];
       away?: components["schemas"]["StandingGame"];
     };
-    StandingArray: components["schemas"]["StandingTeam"][];
-    StandingLeague: {
-      id?: string;
-      name?: string;
-      logo?: string;
-      flag?: string;
-      country?: string;
+    StandingArray: (components["schemas"]["StandingTeam"])[];
+    StandingLeague: components["schemas"]["League"] & {
       season?: string;
-      standings?: components["schemas"]["StandingArray"][];
+      standings: (components["schemas"]["StandingArray"])[];
     };
     Standings: {
       league?: components["schemas"]["StandingLeague"];
