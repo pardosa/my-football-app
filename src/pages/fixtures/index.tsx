@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  useTheme,
 } from "@mui/material";
 
 import { AppDispatch } from "../../store";
@@ -33,7 +34,6 @@ export const Fixtures = () => {
   const dispatch = useDispatch<AppDispatch>();
   const fixtures: TFixtures[] = useSelector(selectAllFixtures);
   const status = useSelector(getFixturesStatus);
-
   const { id, season } = useParams();
 
   useEffect(() => {
@@ -55,65 +55,108 @@ export const Fixtures = () => {
           <List sx={style} component="nav" aria-label="mailbox folders">
             {fixtures.map((fx) => (
               <>
-                <ListItem button>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6} md={4}>
-                      <Stack direction="row" spacing={4}>
-                        <ListItemAvatar>
-                          <Avatar alt={fx.league?.name} src={fx.league?.logo} />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={fx.league?.name}
-                          secondary={fx.league?.season}
-                        />
-                      </Stack>
-                    </Grid>
-
-                    <Grid item xs={6} md={4}>
-                      <Grid container spacing={1}>
-                        <Grid item xs={6} md={4}>
-                          <Stack alignItems="center" spacing={1}>
+                <Box
+                  sx={{
+                    bgcolor: "background.paper",
+                    boxShadow: 1,
+                    borderRadius: 2,
+                    p: 2,
+                    minWidth: 300,
+                    textAlign: "center",
+                    mb: 4,
+                  }}
+                >
+                  <ListItem>
+                    <Grid container spacing={1} alignItems="center">
+                      <Grid item xs={6} md={2}>
+                        <Stack direction="row" spacing={1}>
+                          <ListItemAvatar>
                             <Avatar
-                              src={fx?.teams?.home?.logo}
-                              sx={{ width: 40, height: 40 }}
+                              alt={fx.league?.name}
+                              src={fx.league?.logo}
                             />
-                            <Typography variant="h6">
-                              {fx?.teams?.home?.name}
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={fx.league?.name}
+                            secondary={fx.league?.season}
+                          />
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={6} md={8}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} md={4}>
+                            <Stack
+                              direction="row-reverse"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Avatar
+                                src={fx?.teams?.home?.logo}
+                                sx={{ width: 40, height: 40 }}
+                              />
+                              <Typography variant="h6">
+                                {fx?.teams?.home?.name}
+                              </Typography>
+                            </Stack>{" "}
+                          </Grid>
+                          <Grid item xs={6} md={1}>
+                            <Typography
+                              variant="h5"
+                              style={{ textAlign: "right" }}
+                            >
+                              {fx.goals?.home}
                             </Typography>
-                          </Stack>{" "}
-                        </Grid>
-                        <Grid item xs={6} md={1}>
-                          <div style={{ textAlign: "center" }}>
-                            {fx.goals?.home}
-                          </div>
-                        </Grid>
-                        <Grid item xs={6} md={2}>
-                          <div style={{ textAlign: "center" }}>vs</div>
-                        </Grid>
-                        <Grid item xs={6} md={1}>
-                          <div style={{ textAlign: "center" }}>
-                            {fx.goals?.away}
-                          </div>
-                        </Grid>
-                        <Grid item xs={6} md={4}>
-                          <Stack alignItems="center" spacing={1}>
-                            <Avatar
-                              src={fx?.teams?.away?.logo}
-                              sx={{ width: 40, height: 40 }}
-                            />
-                            <Typography variant="h6">
-                              {fx?.teams?.away?.name}
+                          </Grid>
+                          <Grid item xs={6} md={2}>
+                            <Typography
+                              variant="h6"
+                              style={{ textAlign: "center" }}
+                            >
+                              -
                             </Typography>
-                          </Stack>{" "}
+                          </Grid>
+                          <Grid item xs={12} md={1}>
+                            <Typography
+                              variant="h5"
+                              style={{ textAlign: "left" }}
+                            >
+                              {fx.goals?.away}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6} md={4}>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Avatar
+                                src={fx?.teams?.away?.logo}
+                                sx={{ width: 40, height: 40 }}
+                              />
+                              <Typography variant="h6">
+                                {fx?.teams?.away?.name}
+                              </Typography>
+                            </Stack>{" "}
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
 
-                    <Grid item xs={6} md={4}>
-                      <div>xs=6 md=4</div>
+                      <Grid item xs={6} md={2}>
+                        <Stack alignItems="center" spacing={1}>
+                          <Typography variant="h6">
+                            {fx.league?.round}
+                          </Typography>
+                          <Typography variant="subtitle1">
+                            {fx.fixture?.status?.long}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            Referee: {fx.fixture?.referee}
+                          </Typography>
+                        </Stack>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </ListItem>
+                  </ListItem>
+                </Box>
                 <Divider />
               </>
             ))}
