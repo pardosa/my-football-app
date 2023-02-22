@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 // project import
 import MainLayout from "../layout/MainLayout";
+import { Fixture } from "../pages/fixture";
 import { Fixtures } from "../pages/fixtures";
 import { Standings } from "../pages/standings";
 import { Teams } from "../pages/teams";
@@ -61,6 +62,10 @@ const MainRoutes = {
         {
           path: "fixtures/:id/:season",
           element: <Fixtures />,
+        },
+        {
+          path: "fixture/:id",
+          element: <Fixture />,
         },
       ],
     },
