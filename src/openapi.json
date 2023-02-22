@@ -435,6 +435,79 @@
           }
         }
       },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "number": {
+            "type": "number"
+          },
+          "grid": {
+            "type": "string"
+          },
+          "pos": {
+            "type": "string"
+          }
+        }
+      },
+      "Coach": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          }
+        }
+      },
+      "EventsPlayer": {
+        "type": "object",
+        "properties": {
+          "player": {
+            "$ref": "#/components/schemas/Player"
+          }
+        }
+      },
+      "FixtureEvents": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "assist": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "player": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "team": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "time": {
+            "type": "object",
+            "properties": {
+              "elapsed": {
+                "type": "number"
+              },
+              "extra": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "FixtureScores": {
         "type": "object",
         "properties": {
@@ -471,6 +544,29 @@
           }
         ]
       },
+      "FixtureLineups": {
+        "type": "object",
+        "properties": {
+          "coach": {
+            "$ref": "#/components/schemas/Coach"
+          },
+          "startXI": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventsPlayer"
+            }
+          },
+          "substitutes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventsPlayer"
+            }
+          },
+          "formation": {
+            "type": "string"
+          }
+        }
+      },
       "Fixtures": {
         "type": "object",
         "properties": {
@@ -488,6 +584,18 @@
           },
           "scores": {
             "$ref": "#/components/schemas/FixtureScores"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FixtureEvents"
+            }
+          },
+          "lineups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FixtureLineups"
+            }
           }
         }
       },

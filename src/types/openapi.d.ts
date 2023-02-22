@@ -182,6 +182,32 @@ export interface components {
       home?: number;
       away?: number;
     };
+    Player: {
+      id?: number;
+      name?: string;
+      number?: number;
+      grid?: string;
+      pos?: string;
+    };
+    Coach: {
+      id?: number;
+      name?: string;
+      photo?: string;
+    };
+    EventsPlayer: {
+      player?: components["schemas"]["Player"];
+    };
+    FixtureEvents: {
+      type?: string;
+      detail?: string;
+      assist?: components["schemas"]["Player"];
+      player?: components["schemas"]["Player"];
+      team?: components["schemas"]["Team"];
+      time?: {
+        elapsed?: number;
+        extra?: string;
+      };
+    };
     FixtureScores: {
       halftime?: components["schemas"]["FixtureGoals"];
       fulltime?: components["schemas"]["FixtureGoals"];
@@ -192,12 +218,20 @@ export interface components {
       season?: string;
       round?: string;
     };
+    FixtureLineups: {
+      coach?: components["schemas"]["Coach"];
+      startXI?: (components["schemas"]["EventsPlayer"])[];
+      substitutes?: (components["schemas"]["EventsPlayer"])[];
+      formation?: string;
+    };
     Fixtures: {
       fixture?: components["schemas"]["Fixture"];
       league?: components["schemas"]["FixtureLeague"];
       teams?: components["schemas"]["FixtureTeams"];
       goals?: components["schemas"]["FixtureGoals"];
       scores?: components["schemas"]["FixtureScores"];
+      events?: (components["schemas"]["FixtureEvents"])[];
+      lineups?: (components["schemas"]["FixtureLineups"])[];
     };
     StandingGoals: {
       for?: number;
