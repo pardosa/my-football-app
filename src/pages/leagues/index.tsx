@@ -42,7 +42,7 @@ export default function Leagues() {
         title: "League Name",
         renderCell: (row) => {
           return row.league?.logo !== null ? (
-            <Stack direction="row" spacing={4}>
+            <Stack direction="row" spacing={2}>
               <ListItemAvatar>
                 <Avatar alt={row.league?.name} src={row.league?.logo} />
               </ListItemAvatar>
