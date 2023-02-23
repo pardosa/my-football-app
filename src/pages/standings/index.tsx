@@ -33,7 +33,7 @@ import { Badge as CustomBadge } from "../../components/@extended/Badge";
 type TStandings = components["schemas"]["Standings"];
 type TStandingTeam = components["schemas"]["StandingTeam"];
 
-export const Standings = () => {
+const Standings = () => {
   const dispatch = useDispatch<AppDispatch>();
   const standings: TStandings[] = useSelector(selectAllStandings);
   const status = useSelector(getStandingsStatus);
@@ -164,10 +164,7 @@ export const Standings = () => {
 
   useEffect(() => {
     if (id && season)
-      standings.length === 0 &&
-        dispatch(
-          getStandings({ leagueId: Number(id), season: Number(season) })
-        );
+      dispatch(getStandings({ leagueId: Number(id), season: Number(season) }));
   }, [dispatch, id, season, standings.length]);
 
   return status === "succeeded" && standings.length > 0 ? (
@@ -228,3 +225,5 @@ export const Standings = () => {
     </Box>
   );
 };
+
+export default Standings;

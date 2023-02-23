@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 
 type TTeams = components["schemas"]["Teams"];
 
-export const Teams = () => {
+const Teams = () => {
   const dispatch = useDispatch<AppDispatch>();
   const teams: TTeams[] = useSelector(selectAllTeams);
   const status = useSelector(getTeamsStatus);
@@ -103,3 +103,5 @@ export const Teams = () => {
     </Box>
   );
 };
+
+export default Teams;

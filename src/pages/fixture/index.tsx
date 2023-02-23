@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
@@ -7,9 +7,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  List,
-  Tabs,
-  Tab,
   Typography,
   Stack,
   Grid,
@@ -17,9 +14,6 @@ import {
   ListItemAvatar,
   ListItemText,
   InputLabel,
-  Step,
-  StepLabel,
-  Stepper,
 } from "@mui/material";
 
 import { AppDispatch } from "../../store";
@@ -38,18 +32,13 @@ import LineUps from "../../components/LineUps";
 
 type TFixtures = components["schemas"]["Fixtures"];
 
-export const Fixture = () => {
+const Fixture = () => {
   const dispatch = useDispatch<AppDispatch>();
   const fixture: TFixtures[] = useSelector(detailFixture);
   const status = useSelector(getFixtureStatus);
   const { id } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
-  const [value, setValue] = useState(1);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   const style = {
     width: "100%",
@@ -60,29 +49,6 @@ export const Fixture = () => {
   interface divProps {
     children?: React.ReactNode;
     label: string;
-  }
-
-  interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: number;
-    value: number;
-  }
-
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`full-width-tabpanel-${index}`}
-        aria-labelledby={`full-width-tab-${index}`}
-        {...other}
-      >
-        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-      </div>
-    );
   }
 
   function DivData(props: divProps) {
@@ -100,7 +66,7 @@ export const Fixture = () => {
 
   useEffect(() => {
     if (id) dispatch(getFixture({ id: Number(id) }));
-  }, [dispatch, id, fixture.length]);
+  }, [dispatch, id]);
 
   return status === "succeeded" && fixture.length > 0 ? (
     <Card key={"fixtures-card-"} sx={style}>
@@ -198,3 +164,5 @@ export const Fixture = () => {
     </Box>
   );
 };
+
+export default Fixture;

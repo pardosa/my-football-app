@@ -2,20 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  Stack,
-  Avatar,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-  Grid,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from "@mui/material";
+import { Card, CardContent, CardHeader, List } from "@mui/material";
 
 import { AppDispatch } from "../../store";
 import { components } from "../../types/openapi";
@@ -30,7 +17,7 @@ import FixtureBox from "../../components/FixtureBox";
 
 type TFixtures = components["schemas"]["Fixtures"];
 
-export const Fixtures = () => {
+const Fixtures = () => {
   const dispatch = useDispatch<AppDispatch>();
   const fixtures: TFixtures[] = useSelector(selectAllFixtures);
   const status = useSelector(getFixturesStatus);
@@ -39,8 +26,7 @@ export const Fixtures = () => {
 
   useEffect(() => {
     if (id && season)
-      fixtures.length === 0 &&
-        dispatch(getFixtures({ teamId: Number(id), season: Number(season) }));
+      dispatch(getFixtures({ teamId: Number(id), season: Number(season) }));
   }, [dispatch, id, season, fixtures.length]);
 
   const style = {
@@ -68,3 +54,5 @@ export const Fixtures = () => {
     </Box>
   );
 };
+
+export default Fixtures;
