@@ -8,6 +8,7 @@ import teams from "./teams";
 import standings from "./standings";
 import fixtures from "./fixtures";
 import fixture from "./fixture";
+import player from "./player";
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   standings,
   fixtures,
   fixture,
+  player,
 });
 
 export default reducers;
