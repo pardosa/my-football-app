@@ -19,7 +19,7 @@ export default function LineUps(props: Iprops) {
     <Stack>
       <Typography variant="h5" sx={{ mb: 2 }}>{`${team.name}`}</Typography>
       <Typography variant="subtitle1">Coach</Typography>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
         <ListItemAvatar>
           <Avatar alt={lineups.coach?.name} src={lineups.coach?.photo} />
         </ListItemAvatar>

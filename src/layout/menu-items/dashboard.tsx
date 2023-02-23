@@ -35,14 +35,6 @@ const dashboard = {
       icon: icons.BoxPlotOutlined,
       breadcrumbs: true,
     },
-    {
-      id: "teams",
-      title: "Teams",
-      type: "item",
-      url: "/dashboard/teams",
-      icon: icons.TeamOutlined,
-      breadcrumbs: true,
-    },
   ],
 };
 
