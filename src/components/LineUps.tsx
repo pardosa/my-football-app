@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { components } from "../types/openapi";
+import PlayerName from "./PlayerName";
 
 type Iprops = {
   team: components["schemas"]["Team"];
@@ -32,17 +33,23 @@ export default function LineUps(props: Iprops) {
       <Typography variant="subtitle1">Starting XI</Typography>
       <Stack sx={{ mb: 2 }}>
         {lineups.startXI?.map((pl) => (
-          <Stack
-            direction={"row"}
-          >{`${pl.player?.number} - ${pl.player?.name} (${pl.player?.pos})`}</Stack>
+          <PlayerName
+            number={pl.player?.number}
+            name={pl.player?.name}
+            pos={pl.player?.pos}
+            id={pl.player?.id}
+          />
         ))}
       </Stack>
       <Typography variant="subtitle1">Substitutes</Typography>
       <Stack sx={{ mb: 2 }}>
         {lineups.substitutes?.map((pl) => (
-          <Stack
-            direction={"row"}
-          >{`${pl.player?.number} - ${pl.player?.name} (${pl.player?.pos})`}</Stack>
+          <PlayerName
+            number={pl.player?.number}
+            name={pl.player?.name}
+            pos={pl.player?.pos}
+            id={pl.player?.id}
+          />
         ))}
       </Stack>
     </Stack>

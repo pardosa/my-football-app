@@ -13,7 +13,7 @@ import { store } from "./store";
 const root = createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <ReduxProvider store={store}>
-    <BrowserRouter basename="/free">
+    <BrowserRouter basename="/">
       <App />
     </BrowserRouter>
   </ReduxProvider>

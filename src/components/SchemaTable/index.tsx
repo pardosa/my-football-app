@@ -80,15 +80,8 @@ export default function SchemaTable<T>(
 ): JSX.Element {
   const { config, data, onRowClick, rowClassName, schema, style } = props;
   const [renderData, setRenderData] = React.useState<IRenderData[]>();
-  const [columnSort, setColumnSort] = React.useState<string>();
-  const [isSortAsc, setIsSortAsc] = React.useState<boolean>(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const sortedData: T[] = useMemo(
-    () => _.orderBy(data, [columnSort], [isSortAsc ? "asc" : "desc"]) as T[],
-    [data, columnSort, isSortAsc]
-  );
-  const [searchString, setSearchString] = React.useState<string>("");
 
   function TablePaginationActions(props: TablePaginationActionsProps) {
     const theme = useTheme();
@@ -220,8 +213,8 @@ export default function SchemaTable<T>(
 
   React.useEffect(() => {
     setRenderData(
-      sortedData
-        ? sortedData.map((object, rowIndex) =>
+      data
+        ? data.map((object, rowIndex) =>
             columnNames.reduce(
               (prev: IRenderData, propertyName) => {
                 const schema = properties[propertyName] as SchemaObject;
@@ -284,26 +277,9 @@ export default function SchemaTable<T>(
           )
         : undefined
     );
-  }, [columnNames, config, properties, sortedData]);
+  }, [columnNames, config, properties, data]);
 
-  const filteredData = React.useMemo(() => {
-    let result = renderData;
-    if (!result) {
-      return result;
-    }
-    if (searchString) {
-      const lcQuery = searchString.toLowerCase();
-      result = result.filter(
-        (item) =>
-          !!columnNames.find((columnName) =>
-            `${item[columnName]}`.toLowerCase().includes(lcQuery)
-          )
-      );
-    }
-    return result;
-  }, [columnNames, renderData, searchString]);
-
-  const Th = React.useCallback(
+  const tableHead = React.useCallback(
     (index: number) => {
       const propertyName = columnNames[index];
       const schema = properties[propertyName] as SchemaObject;
@@ -315,21 +291,6 @@ export default function SchemaTable<T>(
       };
       if (!schema) {
         return <div {...divProps} />;
-      }
-      switch (schema.type) {
-        case "boolean":
-          divProps.className += " text-center";
-          break;
-        case "number":
-          divProps.className += " text-center";
-          break;
-        case "string":
-          if (
-            schema.format &&
-            ["date", "date-time"].indexOf(schema.format) >= 0
-          ) {
-            divProps.className += " text-end";
-          } else divProps.className += " text-start";
       }
 
       return (
@@ -343,29 +304,29 @@ export default function SchemaTable<T>(
 
   const onColumnClick = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!onRowClick || !sortedData) {
+      if (!onRowClick || !data) {
         return;
       }
       const { rowIndex } = e.currentTarget.dataset;
       if (!rowIndex) {
         return;
       }
-      if (filteredData) {
-        const row = filteredData[parseInt(rowIndex, 10)];
-        onRowClick(sortedData[row._index], row._index, e);
+      if (renderData) {
+        const row = renderData[parseInt(rowIndex, 10)];
+        onRowClick(data[row._index], row._index, e);
       }
     },
-    [filteredData, onRowClick, sortedData]
+    [renderData, onRowClick, data]
   );
 
-  const Td = React.useCallback(
+  const tableColumn = React.useCallback(
     (rowIndex: number, columnIndex: number): React.ReactElement | null => {
-      if (!filteredData) {
+      if (!renderData) {
         return null;
       }
       const propertyName = columnNames[columnIndex];
       const propertyConfig = config ? config[propertyName] : undefined;
-      const row = filteredData[rowIndex];
+      const row = renderData[rowIndex];
       const schema = properties[propertyName] as SchemaObject;
       const divProps = {
         "data-row-index": rowIndex,
@@ -374,14 +335,14 @@ export default function SchemaTable<T>(
         style,
         onClick: onColumnClick,
         className: `${
-          row && rowClassName ? rowClassName(sortedData[row._index]) : ""
+          data && row && rowClassName ? rowClassName(data[row._index]) : ""
         }`,
       };
 
-      if (propertyConfig?.renderCell && sortedData) {
+      if (propertyConfig?.renderCell && data) {
         return (
           <TableCell {...divProps}>
-            {propertyConfig.renderCell(sortedData[row._index], rowIndex)}
+            {propertyConfig.renderCell(data[row._index], rowIndex)}
           </TableCell>
         );
       }
@@ -393,31 +354,31 @@ export default function SchemaTable<T>(
       return <TableCell {...divProps}>{row[propertyName]}</TableCell>;
     },
     [
-      filteredData,
+      renderData,
       columnNames,
       config,
       properties,
       style,
       onColumnClick,
       rowClassName,
-      sortedData,
+      data,
     ]
   );
 
   const tablePaginated = useMemo(() => {
-    return filteredData ? (
+    return renderData ? (
       <TableBody>
         {(rowsPerPage > 0
-          ? filteredData.slice(
+          ? renderData.slice(
               page * rowsPerPage,
               page * rowsPerPage + rowsPerPage
             )
-          : filteredData
+          : renderData
         ).map((data, rowIndex: number) => {
           return (
             <TableRow hover tabIndex={-1} key={`tr-${rowIndex}`}>
               {columnNames.map((clm, columnIndex: number) =>
-                Td(page * rowsPerPage + rowIndex, columnIndex)
+                tableColumn(page * rowsPerPage + rowIndex, columnIndex)
               )}
             </TableRow>
           );
@@ -426,7 +387,7 @@ export default function SchemaTable<T>(
     ) : (
       <></>
     );
-  }, [filteredData, rowsPerPage, page, columnNames, Td]);
+  }, [renderData, rowsPerPage, page, columnNames, tableColumn]);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -437,17 +398,17 @@ export default function SchemaTable<T>(
           size={"medium"}
         >
           <TableHead>
-            <TableRow>{columnNames.map((clm, idx) => Th(idx))}</TableRow>
+            <TableRow>{columnNames.map((clm, idx) => tableHead(idx))}</TableRow>
           </TableHead>
 
-          {sortedData ? tablePaginated : <CircularProgress />}
-          {filteredData ? (
+          {data ? tablePaginated : <CircularProgress />}
+          {renderData ? (
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[10, 20, 50, { label: "All", value: -1 }]}
                   colSpan={columnNames.length}
-                  count={filteredData.length}
+                  count={renderData.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
