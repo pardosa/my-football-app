@@ -169,6 +169,43 @@
           }
         }
       }
+    },
+    "/player": {
+      "get": {
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "description": "Get list of players",
+        "tags": ["Leagues"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "description": "Get list of players by id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlayerStatistics"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -295,6 +332,281 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SeasonFixture"
+            }
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "age": {
+            "type": "number"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "height": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "injured": {
+            "type": "boolean"
+          },
+          "birth": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "place": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": ["name"]
+      },
+      "PlayerGames": {
+        "type": "object",
+        "properties": {
+          "appearences": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "string"
+          },
+          "lineups": {
+            "type": "number"
+          },
+          "minutes": {
+            "type": "number"
+          },
+          "number": {
+            "type": "number"
+          },
+          "captain": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlayerSubstitutes": {
+        "type": "object",
+        "properties": {
+          "in": {
+            "type": "number"
+          },
+          "out": {
+            "type": "number"
+          },
+          "bench": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerShots": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "on": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerGoals": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "conceded": {
+            "type": "number"
+          },
+          "assists": {
+            "type": "number"
+          },
+          "saves": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerPasses": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "key": {
+            "type": "number"
+          },
+          "accuracy": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerTackles": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "blocks": {
+            "type": "number"
+          },
+          "interceptions": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerDuels": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "won": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerDribbles": {
+        "type": "object",
+        "properties": {
+          "attempts": {
+            "type": "number"
+          },
+          "success": {
+            "type": "number"
+          },
+          "past": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerFouls": {
+        "type": "object",
+        "properties": {
+          "drawn": {
+            "type": "number"
+          },
+          "committed": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerCards": {
+        "type": "object",
+        "properties": {
+          "yellow": {
+            "type": "number"
+          },
+          "yellowred": {
+            "type": "number"
+          },
+          "red": {
+            "type": "number"
+          }
+        }
+      },
+      "PlayerPenalty": {
+        "type": "object",
+        "properties": {
+          "won": {
+            "type": "number"
+          },
+          "commited": {
+            "type": "number"
+          },
+          "scored": {
+            "type": "number"
+          },
+          "missed": {
+            "type": "number"
+          },
+          "saved": {
+            "type": "number"
+          }
+        }
+      },
+      "Statistics": {
+        "type": "object",
+        "properties": {
+          "team": {
+            "$ref": "#/components/schemas/Team"
+          },
+          "league": {
+            "$ref": "#/components/schemas/League"
+          },
+          "games": {
+            "$ref": "#/components/schemas/PlayerGames"
+          },
+          "substitutes": {
+            "$ref": "#/components/schemas/PlayerSubstitutes"
+          },
+          "shots": {
+            "$ref": "#/components/schemas/PlayerShots"
+          },
+          "goals": {
+            "$ref": "#/components/schemas/PlayerGoals"
+          },
+          "passes": {
+            "$ref": "#/components/schemas/PlayerPasses"
+          },
+          "tackles": {
+            "$ref": "#/components/schemas/PlayerTackles"
+          },
+          "duels": {
+            "$ref": "#/components/schemas/PlayerDuels"
+          },
+          "dribbles": {
+            "$ref": "#/components/schemas/PlayerDribbles"
+          },
+          "fouls": {
+            "$ref": "#/components/schemas/PlayerFouls"
+          },
+          "cards": {
+            "$ref": "#/components/schemas/PlayerCards"
+          },
+          "penalty": {
+            "$ref": "#/components/schemas/PlayerPenalty"
+          }
+        }
+      },
+      "PlayerStatistics": {
+        "type": "object",
+        "properties": {
+          "player": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "statistics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Statistics"
             }
           }
         }
@@ -435,7 +747,7 @@
           }
         }
       },
-      "Player": {
+      "FixturePlayer": {
         "type": "object",
         "properties": {
           "id": {
@@ -473,7 +785,7 @@
         "type": "object",
         "properties": {
           "player": {
-            "$ref": "#/components/schemas/Player"
+            "$ref": "#/components/schemas/FixturePlayer"
           }
         }
       },
@@ -487,10 +799,10 @@
             "type": "string"
           },
           "assist": {
-            "$ref": "#/components/schemas/Player"
+            "$ref": "#/components/schemas/FixturePlayer"
           },
           "player": {
-            "$ref": "#/components/schemas/Player"
+            "$ref": "#/components/schemas/FixturePlayer"
           },
           "team": {
             "$ref": "#/components/schemas/Team"

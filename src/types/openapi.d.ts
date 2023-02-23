@@ -87,6 +87,26 @@ export interface paths {
       };
     };
   };
+  "/player": {
+    /** @description Get list of players */
+    get: {
+      /** @description Get list of players */
+      parameters?: {
+          /** @description Get list of players by id */
+        query?: {
+          id?: string;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": (components["schemas"]["PlayerStatistics"])[];
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -133,6 +153,101 @@ export interface components {
       predictions?: boolean;
       odds?: boolean;
       fixtures?: (components["schemas"]["SeasonFixture"])[];
+    };
+    Player: {
+      id?: string;
+      name: string;
+      firstname?: string;
+      lastname?: string;
+      age?: number;
+      nationality?: string;
+      height?: string;
+      weight?: string;
+      photo?: string;
+      injured?: boolean;
+      birth?: {
+        date?: string;
+        place?: string;
+        country?: string;
+      };
+    };
+    PlayerGames: {
+      appearences?: string;
+      position?: string;
+      rating?: string;
+      lineups?: number;
+      minutes?: number;
+      number?: number;
+      captain?: boolean;
+    };
+    PlayerSubstitutes: {
+      in?: number;
+      out?: number;
+      bench?: number;
+    };
+    PlayerShots: {
+      total?: number;
+      on?: number;
+    };
+    PlayerGoals: {
+      total?: number;
+      conceded?: number;
+      assists?: number;
+      saves?: number;
+    };
+    PlayerPasses: {
+      total?: number;
+      key?: number;
+      accuracy?: number;
+    };
+    PlayerTackles: {
+      total?: number;
+      blocks?: number;
+      interceptions?: number;
+    };
+    PlayerDuels: {
+      total?: number;
+      won?: number;
+    };
+    PlayerDribbles: {
+      attempts?: number;
+      success?: number;
+      past?: number;
+    };
+    PlayerFouls: {
+      drawn?: number;
+      committed?: number;
+    };
+    PlayerCards: {
+      yellow?: number;
+      yellowred?: number;
+      red?: number;
+    };
+    PlayerPenalty: {
+      won?: number;
+      commited?: number;
+      scored?: number;
+      missed?: number;
+      saved?: number;
+    };
+    Statistics: {
+      team?: components["schemas"]["Team"];
+      league?: components["schemas"]["League"];
+      games?: components["schemas"]["PlayerGames"];
+      substitutes?: components["schemas"]["PlayerSubstitutes"];
+      shots?: components["schemas"]["PlayerShots"];
+      goals?: components["schemas"]["PlayerGoals"];
+      passes?: components["schemas"]["PlayerPasses"];
+      tackles?: components["schemas"]["PlayerTackles"];
+      duels?: components["schemas"]["PlayerDuels"];
+      dribbles?: components["schemas"]["PlayerDribbles"];
+      fouls?: components["schemas"]["PlayerFouls"];
+      cards?: components["schemas"]["PlayerCards"];
+      penalty?: components["schemas"]["PlayerPenalty"];
+    };
+    PlayerStatistics: {
+      player?: components["schemas"]["Player"];
+      statistics?: (components["schemas"]["Statistics"])[];
     };
     Teams: {
       team?: components["schemas"]["Team"];
@@ -182,7 +297,7 @@ export interface components {
       home?: number;
       away?: number;
     };
-    Player: {
+    FixturePlayer: {
       id?: number;
       name?: string;
       number?: number;
@@ -195,13 +310,13 @@ export interface components {
       photo?: string;
     };
     EventsPlayer: {
-      player?: components["schemas"]["Player"];
+      player?: components["schemas"]["FixturePlayer"];
     };
     FixtureEvents: {
       type?: string;
       detail?: string;
-      assist?: components["schemas"]["Player"];
-      player?: components["schemas"]["Player"];
+      assist?: components["schemas"]["FixturePlayer"];
+      player?: components["schemas"]["FixturePlayer"];
       team?: components["schemas"]["Team"];
       time?: {
         elapsed?: number;
